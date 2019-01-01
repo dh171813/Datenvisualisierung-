@@ -16,35 +16,40 @@
 
 <body>
     <svg style="width: 95%; height: 95%">
-        <image xlink:href="Abbildung1.png" x="0" y="0" height="560" width="750" />
-        <!-- <circle cx= "150" cy="100" r="10" fill="blue"></circle> -->
-        <g transform="translate(240 270) scale(0.3 0.3)" class="plus" id="home">
-            <circle cx="0" cy="0" r="45" fill="white" stroke-width="0" class="background"></circle>
-            <circle cx="0" cy="0" r="45" fill="none" stroke-width="7.5" stroke="blue"></circle>
-            <line x1="-17.5" y1="0" x2="17.5" y2="0" stroke-width="5" stroke="blue"></line>
-            <line x1="0" y1="-17.5" x2="0" y2="17.5" stroke-width="5" stroke="blue"></line>
-        </g>
-        <g transform="translate(600 200) scale(0.3 0.3)" class="plus" id="nursing">
-            <circle cx="0" cy="0" r="45" fill="white" stroke-width="0" class="background"></circle>
-            <circle cx="0" cy="0" r="45" fill="none" stroke-width="7.5" stroke="blue"></circle>
-            <line x1="-17.5" y1="0" x2="17.5" y2="0" stroke-width="5" stroke="blue"></line>
-            <line x1="0" y1="-17.5" x2="0" y2="17.5" stroke-width="5" stroke="blue"></line>
+        <g id="all">
+            <image xlink:href="Abbildung1.png" x="0" y="0" height="560" width="750" />
+            <!-- <circle cx= "150" cy="100" r="10" fill="blue"></circle> -->
+
+            <g>
+                <circle cx="200" cy="280" r="5" fill="red" class="head1"></circle>
+                <circle cx="220" cy="330" r="5" fill="red" class="arm1"></circle>
+                <circle cx="210" cy="380" r="5" fill="red" class="leg1"></circle>
+                <circle cx="185" cy="325" r="5" fill="red" class="back1"></circle>
+            </g>
+
+            <g>
+                <circle cx="500" cy="195" r="5" fill="red" class="head2"></circle>
+                <circle cx="520" cy="245" r="5" fill="red" class="arm2"></circle>
+                <circle cx="510" cy="300" r="5" fill="red" class="leg2"></circle>
+                <circle cx="485" cy="240" r="5" fill="red" class="back2"></circle>
+            </g>
+
+
+            <g transform="translate(240 270) scale(0.3 0.3)" class="plus" id="home">
+                <circle cx="0" cy="0" r="45" fill="white" stroke-width="0" class="background"></circle>
+                <circle cx="0" cy="0" r="45" fill="none" stroke-width="7.5" stroke="blue"></circle>
+                <line x1="-17.5" y1="0" x2="17.5" y2="0" stroke-width="5" stroke="blue"></line>
+                <line x1="0" y1="-17.5" x2="0" y2="17.5" stroke-width="5" stroke="blue" class="plus"></line>
+            </g>
+            <g transform="translate(600 200) scale(0.3 0.3)" class="plus" id="nursing">
+                <circle cx="0" cy="0" r="45" fill="white" stroke-width="0" class="background"></circle>
+                <circle cx="0" cy="0" r="45" fill="none" stroke-width="7.5" stroke="blue"></circle>
+                <line x1="-17.5" y1="0" x2="17.5" y2="0" stroke-width="5" stroke="blue"></line>
+                <line x1="0" y1="-17.5" x2="0" y2="17.5" stroke-width="5" stroke="blue"></line>
+            </g>
         </g>
 
-        <g>
-            <circle cx="200" cy="280" r="5" fill="red" class="head1"></circle>
-            <circle cx="220" cy="330" r="5" fill="red" class="arm1"></circle>
-            <circle cx="210" cy="380" r="5" fill="red" class="leg1"></circle>
-            <circle cx="185" cy="325" r="5" fill="red" class="back1"></circle>
-        </g>
 
-        <g>
-            <circle cx="500" cy="195" r="5" fill="red" class="head2"></circle>
-            <circle cx="520" cy="245" r="5" fill="red" class="arm2"></circle>
-            <circle cx="510" cy="300" r="5" fill="red" class="leg2"></circle>
-            <circle cx="485" cy="240" r="5" fill="red" class="back2"></circle>
-        </g>
-      
 
     </svg>
 
@@ -75,8 +80,11 @@
             // or output as hex if preferred
 
         }
+        var zoomed = false;
         d3.select(".plus#home").on("click", function (event) {
-            alert("Test");
+            d3.select("line.plus").attr("stroke", zoomed ? "blue" : "none");
+            d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-120 -600) scale(2.5 2.5)");
+            zoomed = !zoomed;
         });
 
         var perc = 1 / 10;
