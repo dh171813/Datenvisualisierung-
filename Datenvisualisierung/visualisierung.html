@@ -11,49 +11,137 @@
         .plus:hover circle.background {
             fill: lightblue;
         }
+
+        svg text {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+        }
     </style>
 </head>
 
 <body>
     <svg style="width: 95%; height: 95%">
         <g id="all">
-            <image xlink:href="Abbildung1.png" x="0" y="0" height="560" width="750" />
-            <!-- <circle cx= "150" cy="100" r="10" fill="blue"></circle> -->
-
-            <g>
-                <circle cx="200" cy="280" r="5" fill="red" class="head1"></circle>
-                <circle cx="220" cy="330" r="5" fill="red" class="arm1"></circle>
-                <circle cx="210" cy="380" r="5" fill="red" class="leg1"></circle>
-                <circle cx="185" cy="325" r="5" fill="red" class="back1"></circle>
-            </g>
-
-            <g>
-                <circle cx="500" cy="195" r="5" fill="red" class="head2"></circle>
-                <circle cx="520" cy="245" r="5" fill="red" class="arm2"></circle>
-                <circle cx="510" cy="300" r="5" fill="red" class="leg2"></circle>
-                <circle cx="485" cy="240" r="5" fill="red" class="back2"></circle>
-            </g>
+            <image xlink:href="UmrissWien.png" x="0" y="0" height="560" width="750" class="vienna" />
 
 
-            <g transform="translate(240 270) scale(0.3 0.3)" class="plus" id="home">
-                <circle cx="0" cy="0" r="45" fill="white" stroke-width="0" class="background"></circle>
-                <circle cx="0" cy="0" r="45" fill="none" stroke-width="7.5" stroke="blue"></circle>
-                <line x1="-17.5" y1="0" x2="17.5" y2="0" stroke-width="5" stroke="blue"></line>
-                <line x1="0" y1="-17.5" x2="0" y2="17.5" stroke-width="5" stroke="blue" class="plus"></line>
-            </g>
-            <g transform="translate(600 200) scale(0.3 0.3)" class="plus" id="nursing">
-                <circle cx="0" cy="0" r="45" fill="white" stroke-width="0" class="background"></circle>
-                <circle cx="0" cy="0" r="45" fill="none" stroke-width="7.5" stroke="blue"></circle>
-                <line x1="-17.5" y1="0" x2="17.5" y2="0" stroke-width="5" stroke="blue"></line>
-                <line x1="0" y1="-17.5" x2="0" y2="17.5" stroke-width="5" stroke="blue"></line>
-            </g>
+
+
+
         </g>
-
 
 
     </svg>
 
     <script lang="text/javascript">
+        function drawHouse(parentSelector, text, x, y, w, h) {
+            var points = [[-45, 50], [45, 50], [45, -4], [50, 0], [50, -10], [0, -50], [- 50, -10], [- 50, 0], [- 45, -4]];
+            var pointsStr = "";
+            for (var i = 0; i < points.length; i++) {
+                pointsStr += (points[i][0] * w / 100 + x) + "," + (points[i][1] * h / 100 + y) + " ";
+            }
+            var parent = d3.select(parentSelector);
+            var group = parent.append("g");
+            var image = group.append("image")
+                .attr("x", x - 130)
+                .attr("y", y - h / 2.75)
+                .attr("width", 250)
+                .attr("height", h / 1.25)
+                .attr("xlink:href", "Person.png");
+
+            var circles = group.append("g")
+                .attr("transform", "translate(" + (x + 5) + " " + (y - 55) + ")");
+
+            circles.append("circle")
+                .attr("cx", "15")
+                .attr("cy", "0")
+                .attr("r", "5")
+                .attr("fill", "red");
+            circles.append("circle")
+                .attr("cx", "35")
+                .attr("cy", "50")
+                .attr("r", "5")
+                .attr("fill", "red");
+            circles.append("circle")
+                .attr("cx", "25")
+                .attr("cy", "100")
+                .attr("r", "5")
+                .attr("fill", "red");
+            circles.append("circle")
+                .attr("cx", "0")
+                .attr("cy", "45")
+                .attr("r", "5")
+                .attr("fill", "red");
+
+            var house = group.append("polygon")
+                .attr("points", pointsStr)
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", "1.5");
+            var text = group.append("text")
+                .attr("x", x)
+                .attr("y", y + h / 2 + 18)
+                .attr("fill", "black")
+                .attr("text-anchor", "middle")
+                .attr("font-size", "20px")
+                .attr("font-weight", "bold")
+                .text(text);
+            var zoom = group.append("g")
+                .attr("transform", "translate(" + (x + w / 2.85) + " " + (y - h / 2.85) + ") scale(0.3 0.3)")
+                .attr("class", "plus");
+
+            zoom.append("circle")
+                .attr("cx", "0")
+                .attr("cy", "0")
+                .attr("r", "45")
+                .attr("fill", "white")
+                .attr("stroke-width", "0")
+                .attr("class", "background");
+            zoom.append("circle")
+                .attr("cx", "0")
+                .attr("cy", "0")
+                .attr("r", "45")
+                .attr("fill", "none")
+                .attr("stroke-width", "7.5")
+                .attr("stroke", "blue");
+            zoom.append("line")
+                .attr("x1", "-17.5")
+                .attr("y1", "0")
+                .attr("x2", "17.5")
+                .attr("y2", "0")
+                .attr("stroke-width", "5")
+                .attr("stroke", "blue");
+            zoom.append("line")
+                .attr("x1", "0")
+                .attr("y1", "-17.5")
+                .attr("x2", "0")
+                .attr("y2", "17.5")
+                .attr("stroke-width", "5")
+                .attr("stroke", "blue")
+                .attr("class", "plus");
+
+            return group;
+        }
+
+        var zoomed = false;
+        var home = drawHouse("#all", "Zu Hause", 190, 330, 180, 200);
+        var nursing = drawHouse("#all", "In der Pflegeeinrichtung", 500, 260, 300, 200);
+        home.attr("class", "home")
+            .select("g.plus").on("click", function (event) {
+                d3.select(this).select("line.plus").attr("stroke", zoomed ? "blue" : "none");
+                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-120 -550) scale(2.5 2.5)");
+                d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
+                nursing.transition().duration(750).style("opacity", zoomed ? "1" : "0");
+                zoomed = !zoomed;
+            });
+        nursing.attr("class", "nursing")
+            .select("g.plus").on("click", function (event) {
+                d3.select(this).select("line.plus").attr("stroke", zoomed ? "blue" : "none");
+                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-800 -380) scale(2.5 2.5)");
+                d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
+                home.transition().duration(750).style("opacity", zoomed ? "1" : "0");
+                zoomed = !zoomed;
+            });
+
         var percentColors = [
             { pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
             { pct: 0.5, color: { r: 0xff, g: 0xff, b: 0 } },
@@ -80,19 +168,14 @@
             // or output as hex if preferred
 
         }
-        var zoomed = false;
-        d3.select(".plus#home").on("click", function (event) {
-            d3.select("line.plus").attr("stroke", zoomed ? "blue" : "none");
-            d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-120 -600) scale(2.5 2.5)");
-            zoomed = !zoomed;
-        });
 
         var perc = 1 / 10;
         d3.select(".head").attr("fill", getColorForPercentage(perc)).attr("r", 50 * perc);
 
-        d3.csv("Sturzaten_bearbeitet_Koerperregionen.csv", function (data) {
-            console.log(data);
-        })
+        d3.dsv(";", "Sturzdaten.csv")
+            .then(function (data) {
+                console.log(data);
+            })
     </script>
 </body>
 
