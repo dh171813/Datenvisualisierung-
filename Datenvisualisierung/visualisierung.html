@@ -2,6 +2,7 @@
 
 <head>
     <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
 
     <style>
         .plus:hover {
@@ -15,22 +16,43 @@
         svg text {
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
         }
+
+
+        div.tooltip {
+            position: absolute;
+            text-align: center;
+            width: 85px;
+            height: 28px;
+            padding: 2px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        svg {
+            float: left;
+        }
+
+        .canvas {
+            float: right;
+        }
     </style>
 </head>
 
 <body>
-    <svg style="width: 95%; height: 95%">
+    <svg style="width: 60%; height: 95%">
         <g id="all">
             <image xlink:href="UmrissWien.png" x="0" y="0" height="560" width="750" class="vienna" />
-
-
-
-
-
+            <!-- durch Javascript-Funktionen kommen hier mehr Infos/Bilder dazu -->
         </g>
 
-
     </svg>
+
+    <div width="35%" height="95%" class="canvas">
+        <canvas id="mychart"> </canvas>
+    </div>
 
     <script lang="text/javascript">
         function drawHouse(parentSelector, text, x, y, w, h) {
@@ -49,29 +71,33 @@
                 .attr("xlink:href", "Person.png");
 
             var circles = group.append("g")
+                .attr("class", "circles")
                 .attr("transform", "translate(" + (x + 5) + " " + (y - 55) + ")");
 
             circles.append("circle")
                 .attr("cx", "15")
                 .attr("cy", "0")
                 .attr("r", "5")
-                .attr("fill", "red");
+                .attr("fill", "red")
+                .attr("class", "head");
             circles.append("circle")
                 .attr("cx", "35")
                 .attr("cy", "50")
                 .attr("r", "5")
-                .attr("fill", "red");
+                .attr("fill", "red")
+                .attr("class", "upperEx");
             circles.append("circle")
                 .attr("cx", "25")
                 .attr("cy", "100")
                 .attr("r", "5")
-                .attr("fill", "red");
+                .attr("fill", "red")
+                .attr("class", "lowerEx");
             circles.append("circle")
                 .attr("cx", "0")
                 .attr("cy", "45")
                 .attr("r", "5")
-                .attr("fill", "red");
-
+                .attr("fill", "red")
+                .attr("class", "back");
             var house = group.append("polygon")
                 .attr("points", pointsStr)
                 .attr("fill", "none")
@@ -85,10 +111,26 @@
                 .attr("font-size", "20px")
                 .attr("font-weight", "bold")
                 .text(text);
+            var falls = group.append("text")
+                .attr("x", x - w / 2)
+                .attr("y", y + h / 2.5)
+                .attr("fill", "black")
+                .attr("text-anchor", "end")
+                .attr("font-size", "15px")
+                .attr("font-weight", "bold")
+                .text("Stürze");
+            var fallsNumber = group.append("text")
+                .attr("x", x - w / 2)
+                .attr("y", y + h / 2.5 - 15)
+                .attr("fill", "black")
+                .attr("text-anchor", "end")
+                .attr("font-size", "15px")
+                .attr("font-weight", "bold")
+                .attr("class", "falls")
+                .text("--");
             var zoom = group.append("g")
-                .attr("transform", "translate(" + (x + w / 2.85) + " " + (y - h / 2.85) + ") scale(0.3 0.3)")
+                .attr("transform", "translate(" + (x + w / -2.85) + " " + (y - h / 2.85) + ") scale(0.3 0.3)")
                 .attr("class", "plus");
-
             zoom.append("circle")
                 .attr("cx", "0")
                 .attr("cy", "0")
@@ -136,10 +178,30 @@
         nursing.attr("class", "nursing")
             .select("g.plus").on("click", function (event) {
                 d3.select(this).select("line.plus").attr("stroke", zoomed ? "blue" : "none");
-                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-800 -380) scale(2.5 2.5)");
+                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-685 -300) scale(2.2 2.2)");
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 home.transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 zoomed = !zoomed;
+            });
+
+        // Define the div for the tooltip
+        var tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        d3.selectAll("g.circles").selectAll("circle")
+            .on("mouseover", function (d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html("Verletzungen: <br/>" + d3.select(this).attr("count"))
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function (d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
             });
 
         var percentColors = [
@@ -169,12 +231,94 @@
 
         }
 
-        var perc = 1 / 10;
-        d3.select(".head").attr("fill", getColorForPercentage(perc)).attr("r", 50 * perc);
+        var ctx = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
 
         d3.dsv(";", "Sturzdaten.csv")
             .then(function (data) {
                 console.log(data);
+
+
+                //STÜRZE 
+                var homeCount = 0;
+                var nursingCount = 0;
+
+
+                //VERLETZUNGEN
+                var head = [0, 0];
+                var upperEx = [0, 0];
+                var lowerEx = [0, 0];
+                var back = [0, 0];
+
+                for (var i = 0; i < data.length; i++) {
+                    var residence;
+                    //STÜRZE 
+                    if (data[i].Residence == "1") {
+                        nursingCount++;
+                        residence = 1;
+                    } else if (data[i].Residence == "2") {
+                        homeCount++;
+                        residence = 0;
+                    }
+
+                    //VERLETZUNGEN
+                    while (data[i].Bodypart.indexOf(" ") != -1) {
+                        data[i].Bodypart = data[i].Bodypart.replace(" ", "");
+                    }
+                    var bodyparts = data[i].Bodypart.split(",");
+                    for (var j = 0; j < bodyparts.length; j++) {
+                        var bodypart = parseInt(bodyparts[j]);
+                        if (bodypart == 2 || bodypart == 3) {
+                            head[residence]++;
+                        } else if (bodypart >= 6 && bodypart <= 15) {
+                            upperEx[residence]++;
+                        } else if (bodypart >= 16 && bodypart <= 25) {
+                            lowerEx[residence]++;
+                        } else if (bodypart == 4 || bodypart == 5 || bodypart == 26 || bodypart == 27) {
+                            back[residence]++;
+                        }
+                    }
+                }
+
+                //STÜRZE
+                home.select("text.falls").text(homeCount);
+                nursing.select("text.falls").text(nursingCount);
+
+                //VERLETZUNGEN
+                home.select("circle.head").attr("count", head[0]).attr("fill", getColorForPercentage(head[0] / data.length)).attr("r", 4 + 11 * head[0] / data.length);
+                nursing.select("circle.head").attr("count", head[1]).attr("fill", getColorForPercentage(head[1] / data.length)).attr("r", 4 + 11 * head[1] / data.length);
+
+                home.select("circle.upperEx").attr("count", upperEx[0]).attr("fill", getColorForPercentage(upperEx[0] / data.length)).attr("r", 4 + 11 * upperEx[0] / data.length);
+                nursing.select("circle.upperEx").attr("count", upperEx[1]).attr("fill", getColorForPercentage(upperEx[1] / data.length)).attr("r", 4 + 11 * upperEx[1] / data.length);
+
+                home.select("circle.lowerEx").attr("count", lowerEx[0]).attr("fill", getColorForPercentage(lowerEx[0] / data.length)).attr("r", 4 + 11 * lowerEx[0] / data.length);
+                nursing.select("circle.lowerEx").attr("count", lowerEx[1]).attr("fill", getColorForPercentage(lowerEx[1] / data.length)).attr("r", 4 + 11 * lowerEx[1] / data.length);
+
+                home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 4 + 11 * back[0] / data.length);
+                nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 4 + 11 * back[1] / data.length);
+
+
+
+                var doughnut = new Chart(ctx, {
+                    type: "doughnut",
+                    data: {
+                        datasets: [{
+                            label: 'test',
+                            data: [homeCount, nursingCount],
+                            backgroundColor: ['blue', 'lightblue']
+                        }, {
+                            data: [25, 15],
+                            backgroundColor: ['blue', 'lightblue']
+                        }],
+                        labels: ['Zu Hause', 'In der Pflegeeinrichtung'],
+
+                    },
+                });
+                /*
+                    doughnut.data.datasets[0].data.push(15);
+                    doughnut.data.datasets[0].backgroundColor.push('green');
+                    doughnut.data.labels.push('test');
+                    doughnut.update();
+                */
             })
     </script>
 </body>
