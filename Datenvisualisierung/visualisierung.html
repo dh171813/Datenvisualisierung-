@@ -1,5 +1,4 @@
 <html>
-
 <head>
     <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
@@ -118,7 +117,7 @@
                 .attr("text-anchor", "end")
                 .attr("font-size", "15px")
                 .attr("font-weight", "bold")
-                .text("Stürze");
+                .text((unescape("St%FCrze%0A")));
             var fallsNumber = group.append("text")
                 .attr("x", x - w / 2)
                 .attr("y", y + h / 2.5 - 15)
@@ -249,6 +248,7 @@
                 var lowerEx = [0, 0];
                 var back = [0, 0];
 
+                
                 for (var i = 0; i < data.length; i++) {
                     var residence;
                     //STÜRZE 
@@ -260,6 +260,7 @@
                         residence = 0;
                     }
 
+                                    
                     //VERLETZUNGEN
                     while (data[i].Bodypart.indexOf(" ") != -1) {
                         data[i].Bodypart = data[i].Bodypart.replace(" ", "");
@@ -278,7 +279,20 @@
                         }
                     }
                 }
-
+            // Geschlecht
+            var numberWoman = 0;
+            var numberMan = 0;
+                for (var i = 0; i < data.length; i++) {
+                    var gender;
+                    //Geschlecht 
+                    if (data[i].Gender == "1") {
+                        numberWoman++;
+                        gender = 1;
+                    } else if (data[i].Gender == "2") {
+                        numberMan++;
+                        gender = 0;
+                    }
+                }
                 //STÜRZE
                 home.select("text.falls").text(homeCount);
                 nursing.select("text.falls").text(nursingCount);
@@ -296,8 +310,7 @@
                 home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 4 + 11 * back[0] / data.length);
                 nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 4 + 11 * back[1] / data.length);
 
-
-
+                
                 var doughnut = new Chart(ctx, {
                     type: "doughnut",
                     data: {
@@ -306,20 +319,36 @@
                             data: [homeCount, nursingCount],
                             backgroundColor: ['blue', 'lightblue']
                         }, {
-                            data: [25, 15],
-                            backgroundColor: ['blue', 'lightblue']
+                            data: [numberWoman, numberMan],
+                            backgroundColor: ['red', 'blue']
                         }],
                         labels: ['Zu Hause', 'In der Pflegeeinrichtung'],
 
                     },
                 });
+                    
+                
+                /*var barChart = new Chart(ctx, {
+                    type: "bar",
+                    // maintainAspectRatio: false,
+                    data: {
+                        datasets: [{
+                            label: 'Geschlecht',
+                            data: [numberWoman, numberMan],
+                            backgroundColor: ['red', 'blue']
+                        }],
+                         labels: ['Frauen', 'Männer'],  
+                    },
+                });
+                */
+                
                 /*
                     doughnut.data.datasets[0].data.push(15);
                     doughnut.data.datasets[0].backgroundColor.push('green');
                     doughnut.data.labels.push('test');
                     doughnut.update();
                 */
-            })
+            });
     </script>
 </body>
 
