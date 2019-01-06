@@ -1,0 +1,355 @@
+<html>
+<head>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+
+    <style>
+        .plus:hover {
+            cursor: pointer;
+        }
+
+        .plus:hover circle.background {
+            fill: lightblue;
+        }
+
+        svg text {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+        }
+
+
+        div.tooltip {
+            position: absolute;
+            text-align: center;
+            width: 85px;
+            height: 28px;
+            padding: 2px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        svg {
+            float: left;
+        }
+
+        .canvas {
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <svg style="width: 60%; height: 95%">
+        <g id="all">
+            <image xlink:href="UmrissWien.png" x="0" y="0" height="560" width="750" class="vienna" />
+            <!-- durch Javascript-Funktionen kommen hier mehr Infos/Bilder dazu -->
+        </g>
+
+    </svg>
+
+    <div width="35%" height="95%" class="canvas">
+        <canvas id="mychart"> </canvas>
+    </div>
+
+    <script lang="text/javascript">
+        function drawHouse(parentSelector, text, x, y, w, h) {
+            var points = [[-45, 50], [45, 50], [45, -4], [50, 0], [50, -10], [0, -50], [- 50, -10], [- 50, 0], [- 45, -4]];
+            var pointsStr = "";
+            for (var i = 0; i < points.length; i++) {
+                pointsStr += (points[i][0] * w / 100 + x) + "," + (points[i][1] * h / 100 + y) + " ";
+            }
+            var parent = d3.select(parentSelector);
+            var group = parent.append("g");
+            var image = group.append("image")
+                .attr("x", x - 130)
+                .attr("y", y - h / 2.75)
+                .attr("width", 250)
+                .attr("height", h / 1.25)
+                .attr("xlink:href", "Person.png");
+
+            var circles = group.append("g")
+                .attr("class", "circles")
+                .attr("transform", "translate(" + (x + 5) + " " + (y - 55) + ")");
+
+            circles.append("circle")
+                .attr("cx", "15")
+                .attr("cy", "0")
+                .attr("r", "5")
+                .attr("fill", "red")
+                .attr("class", "head");
+            circles.append("circle")
+                .attr("cx", "35")
+                .attr("cy", "50")
+                .attr("r", "5")
+                .attr("fill", "red")
+                .attr("class", "upperEx");
+            circles.append("circle")
+                .attr("cx", "25")
+                .attr("cy", "100")
+                .attr("r", "5")
+                .attr("fill", "red")
+                .attr("class", "lowerEx");
+            circles.append("circle")
+                .attr("cx", "0")
+                .attr("cy", "45")
+                .attr("r", "5")
+                .attr("fill", "red")
+                .attr("class", "back");
+            var house = group.append("polygon")
+                .attr("points", pointsStr)
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", "1.5");
+            var text = group.append("text")
+                .attr("x", x)
+                .attr("y", y + h / 2 + 18)
+                .attr("fill", "black")
+                .attr("text-anchor", "middle")
+                .attr("font-size", "20px")
+                .attr("font-weight", "bold")
+                .text(text);
+            var falls = group.append("text")
+                .attr("x", x - w / 2)
+                .attr("y", y + h / 2.5)
+                .attr("fill", "black")
+                .attr("text-anchor", "end")
+                .attr("font-size", "15px")
+                .attr("font-weight", "bold")
+                .text((unescape("St%FCrze%0A")));
+            var fallsNumber = group.append("text")
+                .attr("x", x - w / 2)
+                .attr("y", y + h / 2.5 - 15)
+                .attr("fill", "black")
+                .attr("text-anchor", "end")
+                .attr("font-size", "15px")
+                .attr("font-weight", "bold")
+                .attr("class", "falls")
+                .text("--");
+            var zoom = group.append("g")
+                .attr("transform", "translate(" + (x + w / -2.85) + " " + (y - h / 2.85) + ") scale(0.3 0.3)")
+                .attr("class", "plus");
+            zoom.append("circle")
+                .attr("cx", "0")
+                .attr("cy", "0")
+                .attr("r", "45")
+                .attr("fill", "white")
+                .attr("stroke-width", "0")
+                .attr("class", "background");
+            zoom.append("circle")
+                .attr("cx", "0")
+                .attr("cy", "0")
+                .attr("r", "45")
+                .attr("fill", "none")
+                .attr("stroke-width", "7.5")
+                .attr("stroke", "blue");
+            zoom.append("line")
+                .attr("x1", "-17.5")
+                .attr("y1", "0")
+                .attr("x2", "17.5")
+                .attr("y2", "0")
+                .attr("stroke-width", "5")
+                .attr("stroke", "blue");
+            zoom.append("line")
+                .attr("x1", "0")
+                .attr("y1", "-17.5")
+                .attr("x2", "0")
+                .attr("y2", "17.5")
+                .attr("stroke-width", "5")
+                .attr("stroke", "blue")
+                .attr("class", "plus");
+
+            return group;
+        }
+
+        var zoomed = false;
+        var home = drawHouse("#all", "Zu Hause", 190, 330, 180, 200);
+        var nursing = drawHouse("#all", "In der Pflegeeinrichtung", 500, 260, 300, 200);
+        home.attr("class", "home")
+            .select("g.plus").on("click", function (event) {
+                d3.select(this).select("line.plus").attr("stroke", zoomed ? "blue" : "none");
+                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-120 -550) scale(2.5 2.5)");
+                d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
+                nursing.transition().duration(750).style("opacity", zoomed ? "1" : "0");
+                zoomed = !zoomed;
+            });
+        nursing.attr("class", "nursing")
+            .select("g.plus").on("click", function (event) {
+                d3.select(this).select("line.plus").attr("stroke", zoomed ? "blue" : "none");
+                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-685 -300) scale(2.2 2.2)");
+                d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
+                home.transition().duration(750).style("opacity", zoomed ? "1" : "0");
+                zoomed = !zoomed;
+            });
+
+        // Define the div for the tooltip
+        var tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        d3.selectAll("g.circles").selectAll("circle")
+            .on("mouseover", function (d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html("Verletzungen: <br/>" + d3.select(this).attr("count"))
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function (d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
+        var percentColors = [
+            { pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
+            { pct: 0.5, color: { r: 0xff, g: 0xff, b: 0 } },
+            { pct: 1.0, color: { r: 0x00, g: 0xff, b: 0 } }];
+
+        var getColorForPercentage = function (pct) {
+            for (var i = 1; i < percentColors.length - 1; i++) {
+                if (pct < percentColors[i].pct) {
+                    break;
+                }
+            }
+            var lower = percentColors[i - 1];
+            var upper = percentColors[i];
+            var range = upper.pct - lower.pct;
+            var rangePct = (pct - lower.pct) / range;
+            var pctLower = 1 - rangePct;
+            var pctUpper = rangePct;
+            var color = {
+                r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+                g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+                b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+            };
+            return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+            // or output as hex if preferred
+
+        }
+
+        var ctx = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
+
+        d3.dsv(";", "Sturzdaten.csv")
+            .then(function (data) {
+                console.log(data);
+
+
+                //STÜRZE 
+                var homeCount = 0;
+                var nursingCount = 0;
+
+
+                //VERLETZUNGEN
+                var head = [0, 0];
+                var upperEx = [0, 0];
+                var lowerEx = [0, 0];
+                var back = [0, 0];
+
+                
+                for (var i = 0; i < data.length; i++) {
+                    var residence;
+                    //STÜRZE 
+                    if (data[i].Residence == "1") {
+                        nursingCount++;
+                        residence = 1;
+                    } else if (data[i].Residence == "2") {
+                        homeCount++;
+                        residence = 0;
+                    }
+
+                                    
+                    //VERLETZUNGEN
+                    while (data[i].Bodypart.indexOf(" ") != -1) {
+                        data[i].Bodypart = data[i].Bodypart.replace(" ", "");
+                    }
+                    var bodyparts = data[i].Bodypart.split(",");
+                    for (var j = 0; j < bodyparts.length; j++) {
+                        var bodypart = parseInt(bodyparts[j]);
+                        if (bodypart == 2 || bodypart == 3) {
+                            head[residence]++;
+                        } else if (bodypart >= 6 && bodypart <= 15) {
+                            upperEx[residence]++;
+                        } else if (bodypart >= 16 && bodypart <= 25) {
+                            lowerEx[residence]++;
+                        } else if (bodypart == 4 || bodypart == 5 || bodypart == 26 || bodypart == 27) {
+                            back[residence]++;
+                        }
+                    }
+                }
+            // Geschlecht
+            var numberWoman = 0;
+            var numberMan = 0;
+                for (var i = 0; i < data.length; i++) {
+                    var gender;
+                    //Geschlecht 
+                    if (data[i].Gender == "1") {
+                        numberWoman++;
+                        gender = 1;
+                    } else if (data[i].Gender == "2") {
+                        numberMan++;
+                        gender = 0;
+                    }
+                }
+                //STÜRZE
+                home.select("text.falls").text(homeCount);
+                nursing.select("text.falls").text(nursingCount);
+
+                //VERLETZUNGEN
+                home.select("circle.head").attr("count", head[0]).attr("fill", getColorForPercentage(head[0] / data.length)).attr("r", 4 + 11 * head[0] / data.length);
+                nursing.select("circle.head").attr("count", head[1]).attr("fill", getColorForPercentage(head[1] / data.length)).attr("r", 4 + 11 * head[1] / data.length);
+
+                home.select("circle.upperEx").attr("count", upperEx[0]).attr("fill", getColorForPercentage(upperEx[0] / data.length)).attr("r", 4 + 11 * upperEx[0] / data.length);
+                nursing.select("circle.upperEx").attr("count", upperEx[1]).attr("fill", getColorForPercentage(upperEx[1] / data.length)).attr("r", 4 + 11 * upperEx[1] / data.length);
+
+                home.select("circle.lowerEx").attr("count", lowerEx[0]).attr("fill", getColorForPercentage(lowerEx[0] / data.length)).attr("r", 4 + 11 * lowerEx[0] / data.length);
+                nursing.select("circle.lowerEx").attr("count", lowerEx[1]).attr("fill", getColorForPercentage(lowerEx[1] / data.length)).attr("r", 4 + 11 * lowerEx[1] / data.length);
+
+                home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 4 + 11 * back[0] / data.length);
+                nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 4 + 11 * back[1] / data.length);
+
+                
+                var doughnut = new Chart(ctx, {
+                    type: "doughnut",
+                    data: {
+                        datasets: [{
+                            label: 'test',
+                            data: [homeCount, nursingCount],
+                            backgroundColor: ['blue', 'lightblue']
+                        }, {
+                            data: [numberWoman, numberMan],
+                            backgroundColor: ['red', 'blue']
+                        }],
+                        labels: ['Zu Hause', 'In der Pflegeeinrichtung'],
+
+                    },
+                });
+                    
+                
+                /*var barChart = new Chart(ctx, {
+                    type: "bar",
+                    // maintainAspectRatio: false,
+                    data: {
+                        datasets: [{
+                            label: 'Geschlecht',
+                            data: [numberWoman, numberMan],
+                            backgroundColor: ['red', 'blue']
+                        }],
+                         labels: ['Frauen', 'Männer'],  
+                    },
+                });
+                */
+                
+                /*
+                    doughnut.data.datasets[0].data.push(15);
+                    doughnut.data.datasets[0].backgroundColor.push('green');
+                    doughnut.data.labels.push('test');
+                    doughnut.update();
+                */
+            });
+    </script>
+</body>
+
+</html>
