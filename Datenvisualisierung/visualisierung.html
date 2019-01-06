@@ -173,6 +173,7 @@
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 nursing.transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 zoomed = !zoomed;
+                var ctx2 = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
 
             });
         nursing.attr("class", "nursing")
@@ -182,6 +183,7 @@
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 home.transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 zoomed = !zoomed;
+                var ctx1 = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
             });
 
         // Define the div for the tooltip
@@ -230,6 +232,13 @@
             // or output as hex if preferred
 
         }
+        // Medicine variable
+        var noDetails = 0;
+        var marcoumar = 0;
+        var thromboAss = 0;
+        var lovenox = 0;
+        var daflon = 0;
+        var mulit = 0;
 
         var ctx = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
 
@@ -296,31 +305,24 @@
             
            
             // Medizin
-            var noDetails = 0;
-            var marcoumar = 0;
-            var thromboAss = 0;
-            var lovenox = 0;
-            var daflon = 0;
-            var mulit = 0;
-            for (var i = 0; i < data.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     var medicine;
-                    //Geschlecht 
-                    if (data[i].Conciouisness_loss == "0") {
+                    if (data[i].Medication == "0") {
                         noDetails++;
                         medicine = 1;
                     } else if (data[i].Conciouisness_loss == "1") {
                         marcoumar++;
                         medicine = 0;
-                    } else if (data[i].Conciouisness_loss == "2") {
+                    } else if (data[i].Medication == "2") {
                         thromboAss++;
                         medicine = 0;
-                    } else if (data[i].Conciouisness_loss == "3") {
+                    } else if (data[i].Medication == "3") {
                         lovenox++;
                         medicine = 0;
-                    } else if (data[i].Conciouisness_loss == "4") {
+                    } else if (data[i].Medication == "4") {
                         daflon++;
                         medicine = 0;
-                    } else if (data[i].Conciouisness_loss == "5") {
+                    } else if (data[i].Medication == "5") {
                         mulit++;
                         medicine = 0;
                     }
