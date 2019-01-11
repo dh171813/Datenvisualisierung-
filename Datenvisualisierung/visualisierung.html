@@ -1,5 +1,4 @@
 <html>
-
 <head>
     <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
@@ -118,7 +117,7 @@
                 .attr("text-anchor", "end")
                 .attr("font-size", "15px")
                 .attr("font-weight", "bold")
-                .text("Stürze");
+                .text((unescape("St%FCrze%0A")));
             var fallsNumber = group.append("text")
                 .attr("x", x - w / 2)
                 .attr("y", y + h / 2.5 - 15)
@@ -174,6 +173,8 @@
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 nursing.transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 zoomed = !zoomed;
+                var ctx2 = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
+
             });
         nursing.attr("class", "nursing")
             .select("g.plus").on("click", function (event) {
@@ -182,6 +183,7 @@
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 home.transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 zoomed = !zoomed;
+                var ctx1 = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
             });
 
         // Define the div for the tooltip
@@ -230,6 +232,13 @@
             // or output as hex if preferred
 
         }
+        // Medicine variable
+        var noDetails = 0;
+        var marcoumar = 0;
+        var thromboAss = 0;
+        var lovenox = 0;
+        var daflon = 0;
+        var mulit = 0;
 
         var ctx = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
 
@@ -268,6 +277,7 @@
                         residence = 0;
                     }
 
+                                    
                     //VERLETZUNGEN
                     while (data[i].Bodypart.indexOf(" ") != -1) {
                         data[i].Bodypart = data[i].Bodypart.replace(" ", "");
@@ -286,6 +296,62 @@
                         }
                     }
                 }
+            // Geschlecht
+            var numberWoman = 0;
+            var numberMan = 0;
+                for (var i = 0; i < data.length; i++) {
+                    var gender;
+                    //Geschlecht 
+                    if (data[i].Gender == "1") {
+                        numberWoman++;
+                        gender = 1;
+                    } else if (data[i].Gender == "2") {
+                        numberMan++;
+                        gender = 0;
+                    }
+                }
+            
+           
+            // Medizin
+                for (var i = 0; i < data.length; i++) {
+                    var medicine;
+                    if (data[i].Medication == "0") {
+                        noDetails++;
+                        medicine = 1;
+                    } else if (data[i].Conciouisness_loss == "1") {
+                        marcoumar++;
+                        medicine = 0;
+                    } else if (data[i].Medication == "2") {
+                        thromboAss++;
+                        medicine = 0;
+                    } else if (data[i].Medication == "3") {
+                        lovenox++;
+                        medicine = 0;
+                    } else if (data[i].Medication == "4") {
+                        daflon++;
+                        medicine = 0;
+                    } else if (data[i].Medication == "5") {
+                        mulit++;
+                        medicine = 0;
+                    }
+                }     
+/*
+            // Bewusstseinsverlust
+            var lossOfConciouisness = 0;
+            var NoLossOfConciouisness = 0;
+                for (var i = 0; i < data.length; i++) {
+                    var conciouisness;
+                    //Geschlecht 
+                    if (data[i].Conciouisness_loss == "0") {
+                        lossOfConciouisness++;
+                        conciouisness = 1;
+                    } else if (data[i].Conciouisness_loss == "1") {
+                        NoLossOfConciouisness++;
+                        conciouisness = 0;
+                    }
+                }            
+*/
+
 
                 //STÜRZE
                 home.select("text.falls").text(homeCount);
@@ -304,8 +370,7 @@
                 home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 1 + 40 * back[0] / data.length);
                 nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 1 + 40 * back[1] / data.length);
 
-
-
+                
                 var doughnut = new Chart(ctx, {
                     type: "doughnut",
                     data: {
@@ -314,20 +379,36 @@
                             data: [homeCount, nursingCount],
                             backgroundColor: ['blue', 'lightblue']
                         }, {
-                            data: [25, 15],
-                            backgroundColor: ['blue', 'lightblue']
+                            data: [numberWoman, numberMan],
+                            backgroundColor: ['red', 'blue']
                         }],
                         labels: ['Zu Hause', 'In der Pflegeeinrichtung'],
 
                     },
                 });
+                    
+                
+                /*var barChart = new Chart(ctx, {
+                    type: "bar",
+                    // maintainAspectRatio: false,
+                    data: {
+                        datasets: [{
+                            label: 'Geschlecht',
+                            data: [numberWoman, numberMan],
+                            backgroundColor: ['red', 'blue']
+                        }],
+                         labels: ['Frauen', 'Männer'],  
+                    },
+                });
+                */
+                
                 /*
                     doughnut.data.datasets[0].data.push(15);
                     doughnut.data.datasets[0].backgroundColor.push('green');
                     doughnut.data.labels.push('test');
                     doughnut.update();
                 */
-            })
+            });
     </script>
 </body>
 
