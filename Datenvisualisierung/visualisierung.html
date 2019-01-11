@@ -258,6 +258,11 @@
                 var lowerEx = [0, 0];
                 var back = [0, 0];
 
+                  //GESCHLECHT
+            var men = [0,0];
+            var women = [0,0];
+            
+
 
                 for (var i = 0; i < data.length; i++) {
                     var residence;
@@ -288,6 +293,20 @@
                             back[residence]++;
                         }
                     }
+                   
+                    while (data[i].Gender.indexOf(" ") != -1){
+                        data[i].Gender = data[i].Gender.replace(" ", "");  
+                    }
+                    var gender = data[i].Gender.split(",");
+                    for (var k = 0; k < gender.length; k++){
+                        var gender = parseInt(gender[k]);
+                        if (gender == "1"){
+                            women[residence]++;
+                        } else if(gender == "2"){
+                            men[residence]++;
+                        }
+                    }
+                    
                 }
             // Geschlecht
             var numberWoman = 0;
@@ -303,7 +322,8 @@
                         gender = 0;
                     }
                 }
-            
+
+          
            
             // Medizin
                 for (var i = 0; i < data.length; i++) {
@@ -370,10 +390,10 @@
                         datasets: [{
                             label: 'test',
                             data: [homeCount, nursingCount],
-                            backgroundColor: ['blue', 'lightblue']
+                            backgroundColor: ['orange', 'yellow']
                         }, {
-                            data: [numberWoman, numberMan],
-                            backgroundColor: ['red', 'blue']
+                            data: [men[0], women[0] , men[1], women[1]],
+                            backgroundColor: ['lightblue', 'red', 'lightblue', 'red'],
                         }],
                         labels: ['Zu Hause', 'In der Pflegeeinrichtung'],
 
