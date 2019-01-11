@@ -54,7 +54,7 @@
     </div>
 
     <script lang="text/javascript">
-        function drawHouse(parentSelector, text, x, y, w, h) {
+        function drawHouse(parentSelector, text, x, y, w, h, color) {
             var points = [[-45, 50], [45, 50], [45, -4], [50, 0], [50, -10], [0, -50], [- 50, -10], [- 50, 0], [- 45, -4]];
             var pointsStr = "";
             for (var i = 0; i < points.length; i++) {
@@ -101,7 +101,8 @@
                 .attr("points", pointsStr)
                 .attr("fill", "none")
                 .attr("stroke", "black")
-                .attr("stroke-width", "1.5");
+                .attr("stroke-width", "1.5")
+                //.attr("color", color); 
             var text = group.append("text")
                 .attr("x", x)
                 .attr("y", y + h / 2 + 18)
@@ -164,7 +165,7 @@
         }
 
         var zoomed = false;
-        var home = drawHouse("#all", "Zu Hause", 190, 330, 180, 200);
+        var home = drawHouse("#all", "Zu Hause", 190, 330, 180, 200, "red");
         var nursing = drawHouse("#all", "In der Pflegeeinrichtung", 500, 260, 300, 200);
         home.attr("class", "home")
             .select("g.plus").on("click", function (event) {
