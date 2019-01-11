@@ -249,6 +249,14 @@
                 var lowerEx = [0, 0];
                 var back = [0, 0];
 
+                //THROMBOSE MEDIKAMENTE
+                var thrombose = [0, 0];
+
+                //GESCHLECHTER
+                var male = [0,0];
+                var female = [0,0]; 
+
+
                 for (var i = 0; i < data.length; i++) {
                     var residence;
                     //STÜRZE 
@@ -284,17 +292,17 @@
                 nursing.select("text.falls").text(nursingCount);
 
                 //VERLETZUNGEN
-                home.select("circle.head").attr("count", head[0]).attr("fill", getColorForPercentage(head[0] / data.length)).attr("r", 4 + 11 * head[0] / data.length);
-                nursing.select("circle.head").attr("count", head[1]).attr("fill", getColorForPercentage(head[1] / data.length)).attr("r", 4 + 11 * head[1] / data.length);
+                home.select("circle.head").attr("count", head[0]).attr("fill", getColorForPercentage(head[0] / data.length)).attr("r", 1 + 40 * head[0] / data.length);
+                nursing.select("circle.head").attr("count", head[1]).attr("fill", getColorForPercentage(head[1] / data.length)).attr("r", 1 + 40 * head[1] / data.length);
 
-                home.select("circle.upperEx").attr("count", upperEx[0]).attr("fill", getColorForPercentage(upperEx[0] / data.length)).attr("r", 4 + 11 * upperEx[0] / data.length);
-                nursing.select("circle.upperEx").attr("count", upperEx[1]).attr("fill", getColorForPercentage(upperEx[1] / data.length)).attr("r", 4 + 11 * upperEx[1] / data.length);
+                home.select("circle.upperEx").attr("count", upperEx[0]).attr("fill", getColorForPercentage(upperEx[0] / data.length)).attr("r", 1 +40 * upperEx[0] / data.length);
+                nursing.select("circle.upperEx").attr("count", upperEx[1]).attr("fill", getColorForPercentage(upperEx[1] / data.length)).attr("r", 1 + 40 * upperEx[1] / data.length);
 
-                home.select("circle.lowerEx").attr("count", lowerEx[0]).attr("fill", getColorForPercentage(lowerEx[0] / data.length)).attr("r", 4 + 11 * lowerEx[0] / data.length);
-                nursing.select("circle.lowerEx").attr("count", lowerEx[1]).attr("fill", getColorForPercentage(lowerEx[1] / data.length)).attr("r", 4 + 11 * lowerEx[1] / data.length);
+                home.select("circle.lowerEx").attr("count", lowerEx[0]).attr("fill", getColorForPercentage(lowerEx[0] / data.length)).attr("r", 1 + 40 * lowerEx[0] / data.length);
+                nursing.select("circle.lowerEx").attr("count", lowerEx[1]).attr("fill", getColorForPercentage(lowerEx[1] / data.length)).attr("r", 1 + 40 * lowerEx[1] / data.length);
 
-                home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 4 + 11 * back[0] / data.length);
-                nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 4 + 11 * back[1] / data.length);
+                home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 1 + 40 * back[0] / data.length);
+                nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 1 + 40 * back[1] / data.length);
 
 
 
