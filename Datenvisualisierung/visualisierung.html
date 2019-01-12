@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
@@ -49,8 +50,13 @@
 
     </svg>
 
-    <div width="35%" height="95%" class="canvas">
-        <canvas id="mychart"> </canvas>
+    <div width="35%" height="45%" class="canvas">
+        <canvas id="my-chart"> </canvas>
+    </div>
+
+    
+    <div width="35%" height="45%" class="canvas">
+        <canvas id="bar-chart"> </canvas>
     </div>
 
     <script lang="text/javascript">
@@ -163,8 +169,10 @@
         }
 
         var zoomed = false;
-        var home = drawHouse("#all", "Zu Hause", 190, 330, 180, 200, "lightgreen");
-        var nursing = drawHouse("#all", "In der Pflegeeinrichtung", 500, 260, 300, 200, "darkgreen");
+
+        var home = drawHouse("#all", "Zu Hause", 190, 330, 180, 200, "#3cba9f");
+        var nursing = drawHouse("#all", "In der Pflegeeinrichtung", 500, 260, 300, 200, "#3e95cd");
+
         home.attr("class", "home")
             .select("g.plus").on("click", function (event) {
                 d3.select(this).select("line.plus").attr("stroke", zoomed ? "blue" : "none");
@@ -172,7 +180,6 @@
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 nursing.transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 zoomed = !zoomed;
-                var ctx2 = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
 
             });
         nursing.attr("class", "nursing")
@@ -182,7 +189,6 @@
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 home.transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 zoomed = !zoomed;
-                var ctx1 = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
             });
 
         // Define the div for the tooltip
@@ -239,7 +245,7 @@
         var daflon = 0;
         var mulit = 0;
 
-        var ctx = d3.select("canvas").attr("width", window.innerWidth * 0.38).attr("height", window.innerHeight * 0.95).node();
+        d3.selectAll("canvas").attr("width", window.innerWidth * 0.35).attr("height", window.innerHeight * 0.45);
 
         d3.dsv(";", "Sturzdaten.csv")
             .then(function (data) {
@@ -257,10 +263,10 @@
                 var lowerEx = [0, 0];
                 var back = [0, 0];
 
-                  //GESCHLECHT
-            var men = [0,0];
-            var women = [0,0];
-            
+                //GESCHLECHT
+                var male = [0, 0];
+                var female = [0, 0];
+
 
 
                 for (var i = 0; i < data.length; i++) {
@@ -274,7 +280,7 @@
                         residence = 0;
                     }
 
-                                    
+
                     //VERLETZUNGEN
                     while (data[i].Bodypart.indexOf(" ") != -1) {
                         data[i].Bodypart = data[i].Bodypart.replace(" ", "");
@@ -292,24 +298,24 @@
                             back[residence]++;
                         }
                     }
-                   
-                    while (data[i].Gender.indexOf(" ") != -1){
-                        data[i].Gender = data[i].Gender.replace(" ", "");  
+
+                    while (data[i].Gender.indexOf(" ") != -1) {
+                        data[i].Gender = data[i].Gender.replace(" ", "");
                     }
                     var gender = data[i].Gender.split(",");
-                    for (var k = 0; k < gender.length; k++){
+                    for (var k = 0; k < gender.length; k++) {
                         var gender = parseInt(gender[k]);
-                        if (gender == "1"){
-                            women[residence]++;
-                        } else if(gender == "2"){
-                            men[residence]++;
+                        if (gender == "1") {
+                            female[residence]++;
+                        } else if (gender == "2") {
+                            male[residence]++;
                         }
                     }
-                    
+
                 }
-            // Geschlecht
-            var numberWoman = 0;
-            var numberMan = 0;
+                // Geschlecht
+                var numberWoman = 0;
+                var numberMan = 0;
                 for (var i = 0; i < data.length; i++) {
                     var gender;
                     //Geschlecht 
@@ -322,9 +328,7 @@
                     }
                 }
 
-          
-           
-            // Medizin
+                // Medizin
                 for (var i = 0; i < data.length; i++) {
                     var medicine;
                     if (data[i].Medication == "0") {
@@ -346,23 +350,23 @@
                         mulit++;
                         medicine = 0;
                     }
-                }     
-/*
-            // Bewusstseinsverlust
-            var lossOfConciouisness = 0;
-            var NoLossOfConciouisness = 0;
-                for (var i = 0; i < data.length; i++) {
-                    var conciouisness;
-                    //Geschlecht 
-                    if (data[i].Conciouisness_loss == "0") {
-                        lossOfConciouisness++;
-                        conciouisness = 1;
-                    } else if (data[i].Conciouisness_loss == "1") {
-                        NoLossOfConciouisness++;
-                        conciouisness = 0;
-                    }
-                }            
-*/
+                }
+                /*
+                            // Bewusstseinsverlust
+                            var lossOfConciouisness = 0;
+                            var NoLossOfConciouisness = 0;
+                                for (var i = 0; i < data.length; i++) {
+                                    var conciouisness;
+                                    //Geschlecht 
+                                    if (data[i].Conciouisness_loss == "0") {
+                                        lossOfConciouisness++;
+                                        conciouisness = 1;
+                                    } else if (data[i].Conciouisness_loss == "1") {
+                                        NoLossOfConciouisness++;
+                                        conciouisness = 0;
+                                    }
+                                }            
+                */
 
 
                 //STÜRZE
@@ -373,7 +377,7 @@
                 home.select("circle.head").attr("count", head[0]).attr("fill", getColorForPercentage(head[0] / data.length)).attr("r", 1 + 40 * head[0] / data.length);
                 nursing.select("circle.head").attr("count", head[1]).attr("fill", getColorForPercentage(head[1] / data.length)).attr("r", 1 + 40 * head[1] / data.length);
 
-                home.select("circle.upperEx").attr("count", upperEx[0]).attr("fill", getColorForPercentage(upperEx[0] / data.length)).attr("r", 1 +40 * upperEx[0] / data.length);
+                home.select("circle.upperEx").attr("count", upperEx[0]).attr("fill", getColorForPercentage(upperEx[0] / data.length)).attr("r", 1 + 40 * upperEx[0] / data.length);
                 nursing.select("circle.upperEx").attr("count", upperEx[1]).attr("fill", getColorForPercentage(upperEx[1] / data.length)).attr("r", 1 + 40 * upperEx[1] / data.length);
 
                 home.select("circle.lowerEx").attr("count", lowerEx[0]).attr("fill", getColorForPercentage(lowerEx[0] / data.length)).attr("r", 1 + 40 * lowerEx[0] / data.length);
@@ -382,24 +386,52 @@
                 home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 1 + 40 * back[0] / data.length);
                 nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 1 + 40 * back[1] / data.length);
 
-                
-                var doughnut = new Chart(ctx, {
-                    type: "doughnut",
+
+
+
+                var doughnut = new Chart(document.getElementById('my-chart'), {
+                    type: "pie",
                     data: {
                         datasets: [{
                             label: 'test',
                             data: [homeCount, nursingCount],
-                            backgroundColor: ['lightgreen', 'darkgreen']
+                            backgroundColor: ['#3cba9f', '#3e95cd']
                         }, {
-                            data: [men[0], women[0] , men[1], women[1]],
-                            backgroundColor: ['lightblue', 'red', 'lightblue', 'red'],
+
                         }],
                         labels: ['Zu Hause', 'In der Pflegeeinrichtung'],
 
                     },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Stürze im Dezember 2013 gesamt',
+                        }
+                    }
                 });
-                    
-                
+
+                var genderChart = new Chart(document.getElementById("bar-chart"), {
+                    type: 'bar',
+                    data: {
+                        labels: ["männlich", "weiblich"],
+                        datasets: [
+                            {
+                                label: "Geschlecht",
+                                data: [male[0]+male[1], female[0]+female[1]],
+                                backgroundColor: ["lightblue", "#c45850"]
+                            }
+                        ]
+                    },
+                    options: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Geschlechterverteilung gesamt'
+                        }
+                    }
+                });
+
+
                 /*var barChart = new Chart(ctx, {
                     type: "bar",
                     // maintainAspectRatio: false,
@@ -413,7 +445,7 @@
                     },
                 });
                 */
-                
+
                 /*
                     doughnut.data.datasets[0].data.push(15);
                     doughnut.data.datasets[0].backgroundColor.push('green');
