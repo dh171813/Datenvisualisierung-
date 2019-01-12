@@ -62,6 +62,12 @@
             }
             var parent = d3.select(parentSelector);
             var group = parent.append("g");
+            var house = group.append("polygon")
+                .attr("points", pointsStr)
+                .attr("fill", color)
+                .attr("fill-opacity", "0.5")
+                .attr("stroke", "black")
+                .attr("stroke-width", "1.5")
             var image = group.append("image")
                 .attr("x", x - 130)
                 .attr("y", y - h / 2.75)
@@ -97,12 +103,6 @@
                 .attr("r", "5")
                 .attr("fill", "red")
                 .attr("class", "back");
-            var house = group.append("polygon")
-                .attr("points", pointsStr)
-                .attr("fill", color)
-                .attr("fill-opacity", "0.2")
-                .attr("stroke", "black")
-                .attr("stroke-width", "1.5")
             var text = group.append("text")
                 .attr("x", x)
                 .attr("y", y + h / 2 + 18)
