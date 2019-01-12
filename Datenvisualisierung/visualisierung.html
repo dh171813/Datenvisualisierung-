@@ -9,6 +9,10 @@
             cursor: pointer;
         }
 
+        g.circles>circle:hover {
+            cursor: pointer;
+        }
+
         .plus:hover circle.background {
             fill: lightblue;
         }
@@ -54,7 +58,7 @@
         <canvas id="my-chart"> </canvas>
     </div>
 
-    
+
     <div width="35%" height="45%" class="canvas">
         <canvas id="bar-chart"> </canvas>
     </div>
@@ -170,6 +174,48 @@
 
         var zoomed = false;
 
+        //STÜRZE 
+        var homeCount = 0;
+        var nursingCount = 0;
+
+        //VERLETZUNGEN
+        var head = [0, 0];
+        var upperEx = [0, 0];
+        var lowerEx = [0, 0];
+        var back = [0, 0];
+
+        var headInj = [0, 0];
+        var face = [0, 0];
+        var shoulder = [0, 0];
+        var arm = [0, 0];
+        var elbow = [0, 0];
+        var hand = [0, 0];
+        var hips = [0, 0];
+        var tigh = [0, 0];
+        var knees = [0, 0];
+        var feet = [0, 0];
+        var leg = [0, 0];
+        var neck = [0, 0];
+        var backInj = [0, 0];
+        var chest = [0, 0];
+        var spine = [0, 0];
+
+
+        //GESCHLECHT
+        var male = [0, 0];
+        var female = [0, 0];
+
+        // Medicine variable
+        var noDetails = [0, 0];
+        var marcoumar = [0, 0];
+        var thromboAss = [0, 0];
+        var lovenox = [0, 0];
+        var daflon = [0, 0];
+        var mulit = [0, 0];
+
+        var chartUp;
+        var chartDown;
+
         var home = drawHouse("#all", "Zu Hause", 190, 330, 180, 200, "#3cba9f");
         var nursing = drawHouse("#all", "In der Pflegeeinrichtung", 500, 260, 300, 200, "#3e95cd");
 
@@ -179,8 +225,74 @@
                 d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-120 -550) scale(2.5 2.5)");
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 nursing.transition().duration(750).style("opacity", zoomed ? "1" : "0");
-                zoomed = !zoomed;
+                chartUp.destroy();
+                chartDown.destroy();
+                if (zoomed) {
+                    chartUp = new Chart(document.getElementById('my-chart'), {
+                        type: "pie",
+                        data: {
+                            datasets: [{
+                                label: 'test',
+                                data: [homeCount, nursingCount],
+                                backgroundColor: ['#3cba9f', '#3e95cd']
+                            }, {
 
+                            }],
+                            labels: ['Zu Hause', 'In der Pflegeeinrichtung'],
+
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Stürze im Dezember 2013 gesamt',
+                            }
+                        }
+                    });
+
+                    chartDown = new Chart(document.getElementById("bar-chart"), {
+                        type: 'bar',
+                        data: {
+                            labels: ["männlich", "weiblich"],
+                            datasets: [
+                                {
+                                    label: "Geschlecht",
+                                    data: [male[0] + male[1], female[0] + female[1]],
+                                    backgroundColor: ["lightblue", "#c45850"]
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Geschlechterverteilung gesamt'
+                            }
+                        }
+                    });
+
+                }else {
+                    chartDown = new Chart(document.getElementById("bar-chart"), {
+                        type: 'bar',
+                        data: {
+                            labels: ["keine Angaben", "Marcoumar", "ThromboAss", "Lovenox", "Daflon", "Mulit"],
+                            datasets: [
+                                {
+                                    label: "Medikation",
+                                    data: [noDetails[0], marcoumar[0], thromboAss[0], lovenox[0], daflon[0], mulit[0]],
+                                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "lightblue"]
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'eingenommene Medikation bei Sturz'
+                            }
+                        }
+                    });
+                }
+                zoomed = !zoomed;
             });
         nursing.attr("class", "nursing")
             .select("g.plus").on("click", function (event) {
@@ -188,6 +300,72 @@
                 d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-685 -300) scale(2.2 2.2)");
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 home.transition().duration(750).style("opacity", zoomed ? "1" : "0");
+                chartUp.destroy();
+                chartDown.destroy();
+                if (zoomed) {
+                    chartUp = new Chart(document.getElementById('my-chart'), {
+                        type: "pie",
+                        data: {
+                            datasets: [{
+                                label: 'test',
+                                data: [homeCount, nursingCount],
+                                backgroundColor: ['#3cba9f', '#3e95cd']
+                            }, {
+
+                            }],
+                            labels: ['Zu Hause', 'In der Pflegeeinrichtung'],
+
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Stürze im Dezember 2013 gesamt',
+                            }
+                        }
+                    });
+
+                    chartDown = new Chart(document.getElementById("bar-chart"), {
+                        type: 'bar',
+                        data: {
+                            labels: ["männlich", "weiblich"],
+                            datasets: [
+                                {
+                                    label: "Geschlecht",
+                                    data: [male[0] + male[1], female[0] + female[1]],
+                                    backgroundColor: ["lightblue", "#c45850"]
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Geschlechterverteilung gesamt'
+                            }
+                        }
+                    });
+                } else {
+                    chartDown = new Chart(document.getElementById("bar-chart"), {
+                        type: 'bar',
+                        data: {
+                            labels: ["keine Angaben", "Marcoumar", "ThromboAss", "Lovenox", "Daflon", "Mulit"],
+                            datasets: [
+                                {
+                                    label: "Medikation",
+                                    data: [noDetails[1], marcoumar[1], thromboAss[1], lovenox[1], daflon[1], mulit[1]],
+                                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "lightblue"]
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'eingenommene Medikation bei Sturz'
+                            }
+                        }
+                    });
+                }
                 zoomed = !zoomed;
             });
 
@@ -237,35 +415,13 @@
             // or output as hex if preferred
 
         }
-        // Medicine variable
-        var noDetails = 0;
-        var marcoumar = 0;
-        var thromboAss = 0;
-        var lovenox = 0;
-        var daflon = 0;
-        var mulit = 0;
+
 
         d3.selectAll("canvas").attr("width", window.innerWidth * 0.35).attr("height", window.innerHeight * 0.45);
 
         d3.dsv(";", "Sturzdaten.csv")
             .then(function (data) {
                 console.log(data);
-
-
-                //STÜRZE 
-                var homeCount = 0;
-                var nursingCount = 0;
-
-
-                //VERLETZUNGEN
-                var head = [0, 0];
-                var upperEx = [0, 0];
-                var lowerEx = [0, 0];
-                var back = [0, 0];
-
-                //GESCHLECHT
-                var male = [0, 0];
-                var female = [0, 0];
 
 
 
@@ -281,7 +437,7 @@
                     }
 
 
-                    //VERLETZUNGEN
+                    //VERLETZUNGEN IN KÖRPERREGIONEN
                     while (data[i].Bodypart.indexOf(" ") != -1) {
                         data[i].Bodypart = data[i].Bodypart.replace(" ", "");
                     }
@@ -299,6 +455,49 @@
                         }
                     }
 
+                    //KÖRPERREGIONEN IM DETAIL
+                    while (data[i].Bodypart.indexOf(" ") != -1) {
+                        data[i].Bodypart = data[i].Bodypart.replace(" ", "");
+                    }
+                    var bodypartsDetail = data[i].Bodypart.split(",");
+                    for (var j = 0; j < bodyparts.length; j++) {
+                        var bodypart = parseInt(bodypartsDetail[j]);
+                        if (bodypart == 2) {
+                            headInj[residence]++;
+                        } else if (bodypart == 3) {
+                            face[residence]++;
+                        } else if (bodypart == 6 || bodypart == 7) {
+                            shoulder[residence]++;
+                        } else if (bodypart == 4) {
+                            chest[residence]++;
+                        } else if (bodypart == 5) {
+                            spine[residence]++;
+                        } else if (bodypart == 8 || bodypart == 9) {
+                            elbow[residence]++;
+                        } else if (bodypart == 10 || bodypart == 11) {
+                            arm[residence]++;
+                        } else if (bodypart >= 12 && bodypart <= 15) {
+                            hand[residence]++;
+                        } else if (bodypart == 16 || bodypart == 17) {
+                            hips[residence]++;
+                        } else if (bodypart == 18 || bodypart == 19) {
+                            tigh[residence]++;
+                        } else if (bodypart == 20 || bodypart == 21) {
+                            knees[residence]++;
+                        } else if (bodypart == 22 || bodypart == 23) {
+                            feet[residence]++;
+                        } else if (bodypart == 24 || bodypart == 25) {
+                            leg[residence]++;
+                        } else if (bodypart == 26) {
+                            backInj[residence]++;
+                        } else if (bodypart == 27) {
+                            neck[residence]++;
+                        }
+
+                    }
+
+
+                    //GESCHLECHT
                     while (data[i].Gender.indexOf(" ") != -1) {
                         data[i].Gender = data[i].Gender.replace(" ", "");
                     }
@@ -312,84 +511,38 @@
                         }
                     }
 
-                }
-                // Geschlecht
-                var numberWoman = 0;
-                var numberMan = 0;
-                for (var i = 0; i < data.length; i++) {
-                    var gender;
-                    //Geschlecht 
-                    if (data[i].Gender == "1") {
-                        numberWoman++;
-                        gender = 1;
-                    } else if (data[i].Gender == "2") {
-                        numberMan++;
-                        gender = 0;
+                    // MEDIKAMENTE
+                    while (data[i].Medication.indexOf(" ") != -1) {
+                        data[i].Medication = data[i].Medication.replace(" ", "");
                     }
-                }
-
-                // Medizin
-                for (var i = 0; i < data.length; i++) {
-                    var medicine;
-                    if (data[i].Medication == "0") {
-                        noDetails++;
-                        medicine = 1;
-                    } else if (data[i].Conciouisness_loss == "1") {
-                        marcoumar++;
-                        medicine = 0;
-                    } else if (data[i].Medication == "2") {
-                        thromboAss++;
-                        medicine = 0;
-                    } else if (data[i].Medication == "3") {
-                        lovenox++;
-                        medicine = 0;
-                    } else if (data[i].Medication == "4") {
-                        daflon++;
-                        medicine = 0;
-                    } else if (data[i].Medication == "5") {
-                        mulit++;
-                        medicine = 0;
+                    var medicine = data[i].Medication.split(",");
+                    for (var n = 0; n < medicine.length; n++) {
+                        var medicine = parseInt(medicine[n]);
+                        if (medicine == 2) {
+                            noDetails[residence]++;
+                        } else if (medicine == 1) {
+                            marcoumar[residence]++;
+                        } else if (medicine == 2) {
+                            thromboAss[residence]++;
+                        } else if (medicine == 3) {
+                            lovenox[residence]++;
+                        } else if (medicine == 4) {
+                            daflon[residence]++;
+                        } else if (medicine == 5) {
+                            mulit[residence]
+                        }
                     }
-                }
-                /*
-                            // Bewusstseinsverlust
-                            var lossOfConciouisness = 0;
-                            var NoLossOfConciouisness = 0;
-                                for (var i = 0; i < data.length; i++) {
-                                    var conciouisness;
-                                    //Geschlecht 
-                                    if (data[i].Conciouisness_loss == "0") {
-                                        lossOfConciouisness++;
-                                        conciouisness = 1;
-                                    } else if (data[i].Conciouisness_loss == "1") {
-                                        NoLossOfConciouisness++;
-                                        conciouisness = 0;
-                                    }
-                                }            
-                */
 
+                }
 
                 //STÜRZE
                 home.select("text.falls").text(homeCount);
                 nursing.select("text.falls").text(nursingCount);
 
-                //VERLETZUNGEN
-                home.select("circle.head").attr("count", head[0]).attr("fill", getColorForPercentage(head[0] / data.length)).attr("r", 1 + 40 * head[0] / data.length);
-                nursing.select("circle.head").attr("count", head[1]).attr("fill", getColorForPercentage(head[1] / data.length)).attr("r", 1 + 40 * head[1] / data.length);
-
-                home.select("circle.upperEx").attr("count", upperEx[0]).attr("fill", getColorForPercentage(upperEx[0] / data.length)).attr("r", 1 + 40 * upperEx[0] / data.length);
-                nursing.select("circle.upperEx").attr("count", upperEx[1]).attr("fill", getColorForPercentage(upperEx[1] / data.length)).attr("r", 1 + 40 * upperEx[1] / data.length);
-
-                home.select("circle.lowerEx").attr("count", lowerEx[0]).attr("fill", getColorForPercentage(lowerEx[0] / data.length)).attr("r", 1 + 40 * lowerEx[0] / data.length);
-                nursing.select("circle.lowerEx").attr("count", lowerEx[1]).attr("fill", getColorForPercentage(lowerEx[1] / data.length)).attr("r", 1 + 40 * lowerEx[1] / data.length);
-
-                home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 1 + 40 * back[0] / data.length);
-                nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 1 + 40 * back[1] / data.length);
 
 
 
-
-                var doughnut = new Chart(document.getElementById('my-chart'), {
+                chartUp = new Chart(document.getElementById('my-chart'), {
                     type: "pie",
                     data: {
                         datasets: [{
@@ -410,14 +563,14 @@
                     }
                 });
 
-                var genderChart = new Chart(document.getElementById("bar-chart"), {
+                chartDown = new Chart(document.getElementById("bar-chart"), {
                     type: 'bar',
                     data: {
                         labels: ["männlich", "weiblich"],
                         datasets: [
                             {
                                 label: "Geschlecht",
-                                data: [male[0]+male[1], female[0]+female[1]],
+                                data: [male[0] + male[1], female[0] + female[1]],
                                 backgroundColor: ["lightblue", "#c45850"]
                             }
                         ]
@@ -431,27 +584,211 @@
                     }
                 });
 
-
-                /*var barChart = new Chart(ctx, {
-                    type: "bar",
-                    // maintainAspectRatio: false,
-                    data: {
-                        datasets: [{
-                            label: 'Geschlecht',
-                            data: [numberWoman, numberMan],
-                            backgroundColor: ['red', 'blue']
-                        }],
-                         labels: ['Frauen', 'Männer'],  
-                    },
+                //VERLETZUNGEN
+                home.select("circle.head").attr("count", head[0]).attr("fill", getColorForPercentage(head[0] / data.length)).attr("r", 1 + 40 * head[0] / data.length).on("click", function () {
+                    if (zoomed) {
+                        chartUp.destroy();
+                        chartUp = new Chart(document.getElementById("my-chart"), {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: ["Kopf", "Gesicht"],
+                                datasets: [
+                                    {
+                                        label: "Kopfverletzungen im Detail",
+                                        data: [headInj[0], face[0]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2"]
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Kopfverletzungen im Detail'
+                                }
+                            }
+                        });
+                    }
                 });
-                */
 
-                /*
-                    doughnut.data.datasets[0].data.push(15);
-                    doughnut.data.datasets[0].backgroundColor.push('green');
-                    doughnut.data.labels.push('test');
-                    doughnut.update();
-                */
+                nursing.select("circle.head").attr("count", head[1]).attr("fill", getColorForPercentage(head[1] / data.length)).attr("r", 1 + 40 * head[1] / data.length).on("click", function () {
+                    if (zoomed) {
+                        chartUp.destroy();
+                        chartUp = new Chart(document.getElementById("my-chart"), {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: ["Kopf", "Gesicht"],
+                                datasets: [
+                                    {
+                                        label: "Kopfverletzungen im Detail",
+                                        data: [headInj[1], face[1]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2"]
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Kopfverletzungen im Detail'
+                                }
+                            }
+                        });
+                    }
+                });
+
+                home.select("circle.upperEx").attr("count", upperEx[0]).attr("fill", getColorForPercentage(upperEx[0] / data.length)).attr("r", 1 + 40 * upperEx[0] / data.length).on("click", function () {
+                    if (zoomed) {
+                        chartUp.destroy();
+                        chartUp = new Chart(document.getElementById("my-chart"), {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: ["Schulter", "Arm", "Ellbogen", "Hand"],
+                                datasets: [
+                                    {
+                                        label: "Verletzungen der oberen Extremität im Detail",
+                                        data: [shoulder[0], arm[0], elbow[0], hand[0]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"]
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Verletzungen der oberen Extremität im Detail'
+                                }
+                            }
+                        });
+                    }
+                });
+                nursing.select("circle.upperEx").attr("count", upperEx[1]).attr("fill", getColorForPercentage(upperEx[1] / data.length)).attr("r", 1 + 40 * upperEx[1] / data.length).on("click", function () {
+                    if (zoomed) {
+                        chartUp.destroy();
+                        chartUp = new Chart(document.getElementById("my-chart"), {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: ["Schulter", "Arm", "Ellbogen", "Hand"],
+                                datasets: [
+                                    {
+                                        label: "Verletzungen der oberen Extremität im Detail",
+                                        data: [shoulder[1], arm[1], elbow[1], hand[1]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"]
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Verletzungen der oberen Extremität im Detail'
+                                }
+                            }
+                        });
+                    }
+                });
+
+                home.select("circle.lowerEx").attr("count", lowerEx[0]).attr("fill", getColorForPercentage(lowerEx[0] / data.length)).attr("r", 1 + 40 * lowerEx[0] / data.length).on("click", function () {
+                    if (zoomed) {
+                        chartUp.destroy();
+                        chartUp = new Chart(document.getElementById("my-chart"), {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: ["Hüfte", "Oberschenkel", "Knie", "Fuß"],
+                                datasets: [
+                                    {
+                                        label: "Verletzungen der unteren Extremität im Detail",
+                                        data: [hips[0], tigh[0], knees[0], feet[0]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"]
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Verletzungen der unteren Extremität im Detail'
+                                }
+                            }
+                        });
+                    }
+                });
+                nursing.select("circle.lowerEx").attr("count", lowerEx[1]).attr("fill", getColorForPercentage(lowerEx[1] / data.length)).attr("r", 1 + 40 * lowerEx[1] / data.length).on("click", function () {
+                    if (zoomed) {
+                        chartUp.destroy();
+                        chartUp = new Chart(document.getElementById("my-chart"), {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: ["Hüfte", "Oberschenkel", "Knie", "Fuß"],
+                                datasets: [
+                                    {
+                                        label: "Verletzungen der oberen Extremität im Detail",
+                                        data: [hips[1], tigh[1], knees[1], feet[1]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"]
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Verletzungen der oberen Extremität im Detail'
+                                }
+                            }
+                        });
+                    }
+                });
+
+                home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 1 + 40 * back[0] / data.length).on("click", function () {
+                    if (zoomed) {
+                        chartUp.destroy();
+                        chartUp = new Chart(document.getElementById("my-chart"), {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: ["Rücken", "Nacken", "Brust", "Wirbelsäule"],
+                                datasets: [
+                                    {
+                                        label: "Verletzungen am Rumpf im Detail",
+                                        data: [backInj[0], neck[0], chest[0], spine[0]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"]
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Verletzungen am Rumpf im Detail'
+                                }
+                            }
+                        });
+                    }
+                });
+                nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 1 + 40 * back[1] / data.length).on("click", function () {
+                    if (zoomed) {
+                        chartUp.destroy();
+                        chartUp = new Chart(document.getElementById("my-chart"), {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: ["Rücken", "Nacken", "Brust", "Wirbelsäule"],
+                                datasets: [
+                                    {
+                                        label: "Verletzungen am Rumpf im Detail",
+                                        data: [backInj[1], neck[1], chest[1], spine[1]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"]
+                                    }
+                                ]
+                            },
+                            options: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Verletzungen am Rumpf im Detail'
+                                }
+                            }
+                        });
+                    }
+                });
             });
     </script>
 </body>
