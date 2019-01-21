@@ -536,7 +536,7 @@
                     var medicine = data[i].Medication.split(",");
                     for (var n = 0; n < medicine.length; n++) {
                         var medicine = parseInt(medicine[n]);
-                        if (medicine == 2) {
+                        if (medicine == 0) {
                             noDetails[residence]++;
                         } else if (medicine == 1) {
                             marcoumar[residence]++;
@@ -547,7 +547,7 @@
                         } else if (medicine == 4) {
                             daflon[residence]++;
                         } else if (medicine == 5) {
-                            mulit[residence]
+                            mulit[residence]++
                         }
                     }
 
