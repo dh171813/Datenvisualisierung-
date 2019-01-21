@@ -300,6 +300,35 @@
                             }
                         }
                     });
+                    chartDown = new Chart(document.getElementById("my-chart"), {
+                        type: 'bar',
+                        data: {
+                            labels: [(unescape("m%E4nnlich")), "weiblich"],
+                            datasets: [
+                                {
+                                    label: "Geschlecht",
+                                    data: [male[0], female[0]],
+                                    backgroundColor: ["lightblue", "#c45850"]
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Geschlechterverteilung'
+                            },
+                            scales: {
+                                yAxes: [{                              
+                                    ticks: {
+                                    min: 0,
+                                    max: 110,
+                                    steps:10
+                                    }
+                                }]
+                            }
+                        }
+                    });
                 }
                 zoomed = !zoomed;
             });
@@ -383,6 +412,35 @@
                             }
                         }
                     });
+                    chartDown = new Chart(document.getElementById("my-chart"), {
+                        type: 'bar',
+                        data: {
+                            labels: [(unescape("m%E4nnlich")), "weiblich"],
+                            datasets: [
+                                {
+                                    label: "Geschlecht",
+                                    data: [male[1], female[1]],
+                                    backgroundColor: ["lightblue", "#c45850"]
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Geschlechterverteilung'
+                            },
+                            scales: {
+                                yAxes: [{                              
+                                    ticks: {
+                                    min: 0,
+                                    max: 110,
+                                    steps:10
+                                    }
+                                }]
+                            }
+                        }
+                    });    
                 }
                 zoomed = !zoomed;
             });
