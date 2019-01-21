@@ -244,7 +244,7 @@
                         options: {
                             title: {
                                 display: true,
-                                text: 'Stürze im Dezember 2013 gesamt',
+                                text: (unescape("St%FCrze im Dezember 2013 gesamt")),
                             }
                         }
                     });
@@ -252,7 +252,7 @@
                     chartDown = new Chart(document.getElementById("bar-chart"), {
                         type: 'bar',
                         data: {
-                            labels: ["männlich", "weiblich"],
+                            labels: [(unescape("m%E4nnlich")), "weiblich"],
                             datasets: [
                                 {
                                     label: "Geschlecht",
@@ -319,7 +319,7 @@
                         options: {
                             title: {
                                 display: true,
-                                text: 'Stürze im Dezember 2013 gesamt',
+                                text: (unescape("St%FCrze im Dezember 2013 gesamt")),
                             }
                         }
                     });
@@ -327,7 +327,7 @@
                     chartDown = new Chart(document.getElementById("bar-chart"), {
                         type: 'bar',
                         data: {
-                            labels: ["männlich", "weiblich"],
+                            labels: [(unescape("m%E4nnlich")), "weiblich"],
                             datasets: [
                                 {
                                     label: "Geschlecht",
@@ -558,7 +558,7 @@
                     options: {
                         title: {
                             display: true,
-                            text: 'Stürze im Dezember 2013 gesamt',
+                            text: (unescape("St%FCrze im Dezember 2013 gesamt")),
                         }
                     }
                 });
@@ -566,13 +566,13 @@
                 chartDown = new Chart(document.getElementById("bar-chart"), {
                     type: 'bar',
                     data: {
-                        labels: ["männlich", "weiblich"],
+                        labels: [(unescape("m%E4nnlich")), "weiblich"],
                         datasets: [
                             {
                                 label: "Geschlecht",
                                 data: [male[0] + male[1], female[0] + female[1]],
                                 backgroundColor: ["lightblue", "#c45850"]
-                            }
+                               }
                         ]
                     },
                     options: {
@@ -580,6 +580,15 @@
                         title: {
                             display: true,
                             text: 'Geschlechterverteilung gesamt'
+                        },
+                        scales: {
+                            yAxes: [{                              
+                                ticks: {
+                                min: 0,
+                                max: 110,
+                                steps:10
+                                }
+                            }]
                         }
                     }
                 });
