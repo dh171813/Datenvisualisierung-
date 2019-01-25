@@ -42,18 +42,26 @@
         .canvas {
             float: right;
         }
+
+        h1 {
+            font: 28px sans-serif;
+            color: rgb(15, 113, 241);
+            text-align:center;
+        }
+        
     </style>
 </head>
 
 <body>
+    <h1>Sturzdaten Wien</h1>
     <svg style="width: 60%; height: 95%">
         <g id="all">
             <image xlink:href="UmrissWien.png" x="0" y="0" height="560" width="750" class="vienna" />
             <!-- durch Javascript-Funktionen kommen hier mehr Infos/Bilder dazu -->
         </g>
-
+        
     </svg>
-
+    
     <div width="35%" height="45%" class="canvas">
         <canvas id="my-chart"> </canvas>
     </div>
@@ -171,7 +179,7 @@
 
             return group;
         }
-
+        
         var zoomed = false;
 
         //STÜRZE 
@@ -332,6 +340,7 @@
                 }
                 zoomed = !zoomed;
             });
+            
         nursing.attr("class", "nursing")
             .select("g.plus").on("click", function (event) {
                 d3.select(this).select("line.plus").attr("stroke", zoomed ? "blue" : "none");
@@ -940,6 +949,7 @@
                 });
             });
     </script>
-</body>
+    <font size="5">Quelle:https://data.opendataportal.at/dataset/708b3bbd-bc18-4f01-8e16-5b1efc9efb77</font>      
+   </body>
 
 </html>
