@@ -43,10 +43,17 @@
             float: right;
         }
 
-        h1 {
-            font: 28px sans-serif;
-            color: rgb(15, 113, 241);
+        h1, .source {
+            font: 30px sans-serif;
+            color: rgb(0, 0, 0);
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             text-align:center;
+        }
+
+        .source {
+            font-size: 15px;
+            position: absolute;
+            bottom: -30px;
         }
         
     </style>
@@ -56,20 +63,22 @@
     <h1>Sturzdaten Wien</h1>
     <svg style="width: 60%; height: 95%">
         <g id="all">
-            <image xlink:href="UmrissWien.png" x="0" y="0" height="560" width="750" class="vienna" />
+            <image xlink:href="UmrissWien.png" x="0" y="-10" height="560" width="750" class="vienna" />
             <!-- durch Javascript-Funktionen kommen hier mehr Infos/Bilder dazu -->
         </g>
         
     </svg>
     
     <div width="35%" height="45%" class="canvas">
-        <canvas id="my-chart"> </canvas>
+        <canvas id="up-chart"> </canvas>
     </div>
 
 
     <div width="35%" height="45%" class="canvas">
-        <canvas id="bar-chart"> </canvas>
+        <canvas id="down-chart"> </canvas>
     </div>
+
+    <p class="source">Quelle:https://data.opendataportal.at/dataset/708b3bbd-bc18-4f01-8e16-5b1efc9efb77</p>
 
     <script lang="text/javascript">
         function drawHouse(parentSelector, text, x, y, w, h, color) {
@@ -230,13 +239,13 @@
         home.attr("class", "home")
             .select("g.plus").on("click", function (event) {
                 d3.select(this).select("line.plus").attr("stroke", zoomed ? "blue" : "none");
-                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-120 -550) scale(2.5 2.5)");
+                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-120 -550) scale(2.4 2.4)");
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 nursing.transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 chartUp.destroy();
                 chartDown.destroy();
                 if (zoomed) {
-                    chartUp = new Chart(document.getElementById('my-chart'), {
+                    chartUp = new Chart(document.getElementById('up-chart'), {
                         type: "pie",
                         data: {
                             datasets: [{
@@ -257,7 +266,7 @@
                         }
                     });
 
-                    chartDown = new Chart(document.getElementById("bar-chart"), {
+                    chartDown = new Chart(document.getElementById("down-chart"), {
                         type: 'bar',
                         data: {
                             labels: [(unescape("m%E4nnlich")), "weiblich"],
@@ -288,7 +297,7 @@
                     });
 
                 }else {
-                    chartDown = new Chart(document.getElementById("bar-chart"), {
+                    chartDown = new Chart(document.getElementById("down-chart"), {
                         type: 'bar',
                         data: {
                             labels: ["keine Angaben", "Marcoumar", "ThromboAss", "Lovenox", "Daflon", "Mulit"],
@@ -308,7 +317,7 @@
                             }
                         }
                     });
-                    chartDown = new Chart(document.getElementById("my-chart"), {
+                    chartUp = new Chart(document.getElementById("up-chart"), {
                         type: 'bar',
                         data: {
                             labels: [(unescape("m%E4nnlich")), "weiblich"],
@@ -344,13 +353,13 @@
         nursing.attr("class", "nursing")
             .select("g.plus").on("click", function (event) {
                 d3.select(this).select("line.plus").attr("stroke", zoomed ? "blue" : "none");
-                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-685 -300) scale(2.2 2.2)");
+                d3.select("#all").transition().duration(750).attr("transform", zoomed ? "" : "translate(-685 -320) scale(2.2 2.2)");
                 d3.select("image.vienna").transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 home.transition().duration(750).style("opacity", zoomed ? "1" : "0");
                 chartUp.destroy();
                 chartDown.destroy();
                 if (zoomed) {
-                    chartUp = new Chart(document.getElementById('my-chart'), {
+                    chartUp = new Chart(document.getElementById('up-chart'), {
                         type: "pie",
                         data: {
                             datasets: [{
@@ -371,7 +380,7 @@
                         }
                     });
 
-                    chartDown = new Chart(document.getElementById("bar-chart"), {
+                    chartDown = new Chart(document.getElementById("down-chart"), {
                         type: 'bar',
                         data: {
                             labels: [(unescape("m%E4nnlich")), "weiblich"],
@@ -401,7 +410,7 @@
                         }
                     });
                 } else {
-                    chartDown = new Chart(document.getElementById("bar-chart"), {
+                    chartDown = new Chart(document.getElementById("down-chart"), {
                         type: 'bar',
                         data: {
                             labels: ["keine Angaben", "Marcoumar", "ThromboAss", "Lovenox", "Daflon", "Mulit"],
@@ -421,7 +430,7 @@
                             }
                         }
                     });
-                    chartDown = new Chart(document.getElementById("my-chart"), {
+                    chartUp = new Chart(document.getElementById("up-chart"), {
                         type: 'bar',
                         data: {
                             labels: [(unescape("m%E4nnlich")), "weiblich"],
@@ -627,7 +636,7 @@
 
 
 
-                chartUp = new Chart(document.getElementById('my-chart'), {
+                chartUp = new Chart(document.getElementById('up-chart'), {
                     type: "pie",
                     data: {
                         datasets: [{
@@ -648,7 +657,7 @@
                     }
                 });
 
-                chartDown = new Chart(document.getElementById("bar-chart"), {
+                chartDown = new Chart(document.getElementById("down-chart"), {
                     type: 'bar',
                     data: {
                         labels: [(unescape("m%E4nnlich")), "weiblich"],
@@ -682,7 +691,7 @@
                 home.select("circle.head").attr("count", head[0]).attr("fill", getColorForPercentage(head[0] / data.length)).attr("r", 1 + 40 * head[0] / data.length).on("click", function () {
                     if (zoomed) {
                         chartUp.destroy();
-                        chartUp = new Chart(document.getElementById("my-chart"), {
+                        chartUp = new Chart(document.getElementById("up-chart"), {
                             type: 'horizontalBar',
                             data: {
                                 labels: ["Kopf", "Gesicht"],
@@ -716,7 +725,7 @@
                 nursing.select("circle.head").attr("count", head[1]).attr("fill", getColorForPercentage(head[1] / data.length)).attr("r", 1 + 40 * head[1] / data.length).on("click", function () {
                     if (zoomed) {
                         chartUp.destroy();
-                        chartUp = new Chart(document.getElementById("my-chart"), {
+                        chartUp = new Chart(document.getElementById("up-chart"), {
                             type: 'horizontalBar',
                             data: {
                                 labels: ["Kopf", "Gesicht"],
@@ -750,7 +759,7 @@
                 home.select("circle.upperEx").attr("count", upperEx[0]).attr("fill", getColorForPercentage(upperEx[0] / data.length)).attr("r", 1 + 40 * upperEx[0] / data.length).on("click", function () {
                     if (zoomed) {
                         chartUp.destroy();
-                        chartUp = new Chart(document.getElementById("my-chart"), {
+                        chartUp = new Chart(document.getElementById("up-chart"), {
                             type: 'horizontalBar',
                             data: {
                                 labels: ["Schulter", "Arm", "Ellbogen", "Hand"],
@@ -783,7 +792,7 @@
                 nursing.select("circle.upperEx").attr("count", upperEx[1]).attr("fill", getColorForPercentage(upperEx[1] / data.length)).attr("r", 1 + 40 * upperEx[1] / data.length).on("click", function () {
                     if (zoomed) {
                         chartUp.destroy();
-                        chartUp = new Chart(document.getElementById("my-chart"), {
+                        chartUp = new Chart(document.getElementById("up-chart"), {
                             type: 'horizontalBar',
                             data: {
                                 labels: ["Schulter", "Arm", "Ellbogen", "Hand"],
@@ -817,15 +826,15 @@
                 home.select("circle.lowerEx").attr("count", lowerEx[0]).attr("fill", getColorForPercentage(lowerEx[0] / data.length)).attr("r", 1 + 40 * lowerEx[0] / data.length).on("click", function () {
                     if (zoomed) {
                         chartUp.destroy();
-                        chartUp = new Chart(document.getElementById("my-chart"), {
+                        chartUp = new Chart(document.getElementById("up-chart"), {
                             type: 'horizontalBar',
                             data: {
-                                labels: [(unescape("H%FCfte")), "Oberschenkel", "Knie", (unescape("Fu%DF"))],
+                                labels: [(unescape("H%FCfte")), "Oberschenkel", "Knie", (unescape("Fu%DF")), "Bein"],
                                 datasets: [
                                     {
                                         label: (unescape("Verletzungen der unteren Extremit%E4t im Detail")),
-                                        data: [hips[0], tigh[0], knees[0], feet[0]],
-                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"]
+                                        data: [hips[0], tigh[0], knees[0], feet[0], leg[0]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"]
                                     }
                                 ]
                             },
@@ -850,15 +859,15 @@
                 nursing.select("circle.lowerEx").attr("count", lowerEx[1]).attr("fill", getColorForPercentage(lowerEx[1] / data.length)).attr("r", 1 + 40 * lowerEx[1] / data.length).on("click", function () {
                     if (zoomed) {
                         chartUp.destroy();
-                        chartUp = new Chart(document.getElementById("my-chart"), {
+                        chartUp = new Chart(document.getElementById("up-chart"), {
                             type: 'horizontalBar',
                             data: {
-                                labels: [(unescape("H%FCfte")), "Oberschenkel", "Knie", (unescape("Fu%DF"))],
+                                labels: [(unescape("H%FCfte")), "Oberschenkel", "Knie", (unescape("Fu%DF")), "Bein"],
                                 datasets: [
                                     {
                                         label: (unescape("Verletzungen der unteren Extremit%E4t im Detail")),
-                                        data: [hips[1], tigh[1], knees[1], feet[1]],
-                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"]
+                                        data: [hips[1], tigh[1], knees[1], feet[1], leg[1]],
+                                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"]
                                     }
                                 ]
                             },
@@ -884,7 +893,7 @@
                 home.select("circle.back").attr("count", back[0]).attr("fill", getColorForPercentage(back[0] / data.length)).attr("r", 1 + 40 * back[0] / data.length).on("click", function () {
                     if (zoomed) {
                         chartUp.destroy();
-                        chartUp = new Chart(document.getElementById("my-chart"), {
+                        chartUp = new Chart(document.getElementById("up-chart"), {
                             type: 'horizontalBar',
                             data: {
                                 labels: [(unescape("R%FCcken")), "Nacken", "Brust", (unescape("Wirbels%E4ule"))],
@@ -917,7 +926,7 @@
                 nursing.select("circle.back").attr("count", back[1]).attr("fill", getColorForPercentage(back[1] / data.length)).attr("r", 1 + 40 * back[1] / data.length).on("click", function () {
                     if (zoomed) {
                         chartUp.destroy();
-                        chartUp = new Chart(document.getElementById("my-chart"), {
+                        chartUp = new Chart(document.getElementById("up-chart"), {
                             type: 'horizontalBar',
                             data: {
                                 labels: [(unescape("R%FCcken")), "Nacken", "Brust", (unescape("Wirbels%E4ule"))],
@@ -949,7 +958,7 @@
                 });
             });
     </script>
-    <font size="5">Quelle:https://data.opendataportal.at/dataset/708b3bbd-bc18-4f01-8e16-5b1efc9efb77</font>      
+         
    </body>
 
 </html>
